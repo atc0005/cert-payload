@@ -16,7 +16,6 @@ issues:
 
 linters:
   enable:
-    - copyloopvar
     - dogsled
     - dupl
     - goconst
