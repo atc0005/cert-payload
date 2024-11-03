@@ -1,0 +1,88 @@
+# Copyright 2024 Adam Chalkley
+#
+# https://github.com/atc0005/cert-payload
+#
+# Licensed under the MIT License. See LICENSE file in the project root for
+# full license information.
+
+# https://help.github.com/en/github/administering-a-repository/configuration-options-for-dependency-updates
+
+######################################################################
+# Monitor Go module dependency updates
+######################################################################
+
+version: 2
+updates:
+  - package-ecosystem: "gomod"
+    directory: "/"
+    open-pull-requests-limit: 10
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      time: "02:00"
+      timezone: "America/Chicago"
+    assignees:
+      - "atc0005"
+    labels:
+      - "dependencies"
+    allow:
+      - dependency-type: "all"
+    commit-message:
+      prefix: "Go Dependency"
+
+  - package-ecosystem: "gomod"
+    directory: "/"
+    open-pull-requests-limit: 10
+    target-branch: "development"
+    schedule:
+      interval: "daily"
+      time: "02:00"
+      timezone: "America/Chicago"
+    assignees:
+      - "atc0005"
+    labels:
+      - "dependencies"
+    allow:
+      - dependency-type: "all"
+    commit-message:
+      prefix: "Go Dependency"
+
+  ######################################################################
+  # Monitor GitHub Actions dependency updates
+  ######################################################################
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    open-pull-requests-limit: 10
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      time: "02:00"
+      timezone: "America/Chicago"
+    assignees:
+      - "atc0005"
+    labels:
+      - "dependencies"
+      - "CI"
+    allow:
+      - dependency-type: "all"
+    commit-message:
+      prefix: "CI Dependency"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    open-pull-requests-limit: 10
+    target-branch: "development"
+    schedule:
+      interval: "daily"
+      time: "02:00"
+      timezone: "America/Chicago"
+    assignees:
+      - "atc0005"
+    labels:
+      - "dependencies"
+      - "CI"
+    allow:
+      - dependency-type: "all"
+    commit-message:
+      prefix: "CI Dependency"
