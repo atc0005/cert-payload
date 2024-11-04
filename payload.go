@@ -132,6 +132,10 @@ type CertificateChainIssues struct {
 	// missing from the certificate chain.
 	MissingIntermediateCerts bool `json:"missing_intermediate_certs"`
 
+	// MissingSANsEntries indicates that SANs entries are missing from a leaf
+	// certificate within the certificates chain.
+	MissingSANsEntries bool `json:"missing_sans_entries"`
+
 	// MultipleLeafCerts indicates that there are more than the single
 	// permitted leaf certificate in the certificate chain.
 	MultipleLeafCerts bool `json:"multiple_leaf_certs"`
