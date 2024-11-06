@@ -203,10 +203,13 @@ type CertificateChainIssues struct {
 type CertChainPayload struct {
 	// CertChainOriginal is the original certificate chain entries encoded in
 	// PEM format.
+	//
+	// Due to size constraints this field may not be populated if the user did
+	// not explicitly opt into bundling the full certificate chain.
 	CertChainOriginal []string `json:"cert_chain_original"`
 
 	// CertChainSubset is a customized subset of the original certificate
-	// chain metadata.
+	// chain metadata. This field should always be populated.
 	CertChainSubset []Certificate `json:"cert_chain_subset"`
 
 	// Server is the FQDN or IP Address specified to the plugin which was used
@@ -219,6 +222,10 @@ type CertChainPayload struct {
 
 	// A fully-qualified domain name or IP Address in the Subject Alternate
 	// Names (SANs) list for the leaf certificate.
+	//
+	// Depending on how the check_cert plugin was called this value may not be
+	// set (e.g., the `server` flag is sufficient if specifying a valid FQDN
+	// associated with the leaf certificate).
 	DNSName string `json:"dns_name"`
 
 	// TCPPort is the TCP port of the remote certificate-enabled service. This
