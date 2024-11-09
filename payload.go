@@ -154,9 +154,9 @@ type CertificateChainIssues struct {
 	// certificate within the certificates chain.
 	MissingSANsEntries bool `json:"missing_sans_entries"`
 
-	// MultipleLeafCerts indicates that there are more than the single
-	// permitted leaf certificate in the certificate chain.
-	MultipleLeafCerts bool `json:"multiple_leaf_certs"`
+	// DuplicateCerts indicates that there are one or more duplicate copies of
+	// a certificate in the certificate chain.
+	DuplicateCerts bool `json:"duplicate_certs"`
 
 	// MisorderedCerts indicates that certificates in the chain are out of the
 	// expected order.
