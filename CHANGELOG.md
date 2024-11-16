@@ -26,6 +26,13 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.5.0] - 2024-11-16
+
+### Added
+
+- (GH-34) Add `Certifiates.SANsEntriesCount` field
+- (GH-35) Add `Certifiates.SignatureAlgorithm` field
+
 ## [v0.4.0] - 2024-11-08
 
 ### Changed
@@ -55,7 +62,8 @@ Add current code used in `atc0005/check-cert` prototype to be used when
 generating an encoded certificate chain metadata payload for inclusion in
 plugin output.
 
-[Unreleased]: https://github.com/atc0005/cert-payload/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/atc0005/cert-payload/compare/v0.5.0...HEAD
+[v0.5.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.5.0
 [v0.4.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.4.0
 [v0.3.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.3.0
 [v0.2.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.2.0
