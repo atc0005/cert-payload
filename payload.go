@@ -87,13 +87,13 @@ type Certificate struct {
 	// certificate.
 	SANsEntries []string `json:"sans_entries"`
 
-	// SANSEntriesCount is the number of Subject Alternate Names for a
+	// SANsEntriesCount is the number of Subject Alternate Names for a
 	// certificate.
 	//
 	// This field allows the payload creator to omit SANs entries to conserve
 	// plugin output size and still indicate the number of SANs entries
 	// present for a certificate for use in display or for metrics purposes.
-	SANSEntriesCount int `json:"sans_entries_count"`
+	SANsEntriesCount int `json:"sans_entries_count"`
 
 	// Issuer is the full CommonName of the signing certificate. This is
 	// intended for (non-cryptographic) comparison purposes.
@@ -146,6 +146,16 @@ type Certificate struct {
 
 	// Status is the overall status of the certificate.
 	Status CertificateStatus `json:"status"`
+
+	// SignatureAlgorithm indicates what certificate signature algorithm was
+	// used by a certification authority (CA)'s private key to sign a checksum
+	// calculated by a signature hash algorithm (i.e., what algorithm was used
+	// to sign the certificate). The verifying party must use the same
+	// algorithm to decrypt and verify the checksum using the CA's public key.
+	//
+	// A cryptographically weak hashing algorithm (e.g. MD2, MD4, MD5, SHA1)
+	// used to sign a certificate is considered to be a vulnerability.
+	SignatureAlgorithm string `json:"signature_algorithm"`
 
 	// Type indicates the type of certificate (leaf, intermediate or root).
 	Type string `json:"type"`
