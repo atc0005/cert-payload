@@ -87,6 +87,14 @@ type Certificate struct {
 	// certificate.
 	SANsEntries []string `json:"sans_entries"`
 
+	// SANSEntriesCount is the number of Subject Alternate Names for a
+	// certificate.
+	//
+	// This field allows the payload creator to omit SANs entries to conserve
+	// plugin output size and still indicate the number of SANs entries
+	// present for a certificate for use in display or for metrics purposes.
+	SANSEntriesCount int `json:"sans_entries_count"`
+
 	// Issuer is the full CommonName of the signing certificate. This is
 	// intended for (non-cryptographic) comparison purposes.
 	Issuer string `json:"issuer"`
