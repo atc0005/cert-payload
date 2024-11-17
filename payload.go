@@ -219,6 +219,9 @@ type CertificateChainIssues struct {
 	//   - https://security.googleblog.com/2014/09/gradually-sunsetting-sha-1.html
 	//   - https://security.googleblog.com/2015/12/an-update-on-sha-1-certificates-in.html
 	//   - https://superuser.com/questions/1122069/why-are-root-cas-with-sha1-signatures-not-a-risk
+	//   - https://developer.mozilla.org/en-US/docs/Web/Security/Weak_Signature_Algorithm
+	//   - https://www.tenable.com/plugins/nessus/35291
+	//   - https://docs.ostorlab.co/kb/WEAK_HASHING_ALGO/index.html
 	WeakSignatureAlgorithm bool `json:"weak_signature_algorithm"`
 
 	// SelfSignedIntermediateCerts indicates that an intermediate certificate
