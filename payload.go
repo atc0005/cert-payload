@@ -203,6 +203,24 @@ type CertificateChainIssues struct {
 	// practice for certificates used outside of temporary / lab environments.
 	SelfSignedLeafCert bool `json:"self_signed_leaf_cert"`
 
+	// WeakSignatureAlgorithm indicates that the certificate chain has been
+	// signed using a cryptographically weak hashing algorithm (e.g. MD2, MD4,
+	// MD5, or SHA1). These signature algorithms are known to be vulnerable to
+	// collision attacks. An attacker can exploit this to generate another
+	// certificate with the same digital signature, allowing an attacker to
+	// masquerade as the affected service.
+	//
+	// NOTE: This does not apply to trusted root certificates; TLS clients
+	// trust them by their identity instead of the signature of their hash;
+	// client code setting this field would need to exclude root certificates
+	// from the determination whether the chain is vulnerable to weak
+	// signature algorithms.
+	//
+	//   - https://security.googleblog.com/2014/09/gradually-sunsetting-sha-1.html
+	//   - https://security.googleblog.com/2015/12/an-update-on-sha-1-certificates-in.html
+	//   - https://superuser.com/questions/1122069/why-are-root-cas-with-sha1-signatures-not-a-risk
+	WeakSignatureAlgorithm bool `json:"weak_signature_algorithm"`
+
 	// SelfSignedIntermediateCerts indicates that an intermediate certificate
 	// in the chain is self-signed.
 	//
