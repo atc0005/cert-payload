@@ -26,6 +26,12 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.6.1] - 2024-11-17
+
+### Changed
+
+- (GH-42) Add more WeakSignatureAlgorithm ref links
+
 ## [v0.6.0] - 2024-11-17
 
 ### Added
@@ -68,7 +74,8 @@ Add current code used in `atc0005/check-cert` prototype to be used when
 generating an encoded certificate chain metadata payload for inclusion in
 plugin output.
 
-[Unreleased]: https://github.com/atc0005/cert-payload/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/atc0005/cert-payload/compare/v0.6.1...HEAD
+[v0.6.1]: https://github.com/atc0005/cert-payload/releases/tag/v0.6.1
 [v0.6.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.6.0
 [v0.5.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.5.0
 [v0.4.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.4.0
