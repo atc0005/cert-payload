@@ -27,12 +27,13 @@ var (
 	ErrMissingValue = errors.New("missing expected value")
 )
 
+// Certificate type values for display and comparison purposes.
 const (
-	certChainPositionLeaf           string = "leaf"
-	certChainPositionLeafSelfSigned string = "leaf; self-signed"
-	certChainPositionIntermediate   string = "intermediate"
-	certChainPositionRoot           string = "root"
-	certChainPositionUnknown        string = "UNKNOWN cert chain position; please submit a bug report"
+	CertChainPositionLeaf           string = "leaf"
+	CertChainPositionLeafSelfSigned string = "leaf; self-signed"
+	CertChainPositionIntermediate   string = "intermediate"
+	CertChainPositionRoot           string = "root"
+	CertChainPositionUnknown        string = "UNKNOWN cert chain position; please submit a bug report"
 )
 
 // Nagios plugin/service check state "labels". These values are used (where
@@ -132,7 +133,7 @@ func ChainPosition(cert *x509.Certificate, certChain []*x509.Certificate) string
 
 	// We require a valid certificate chain. Fail if not provided.
 	if certChain == nil {
-		return certChainPositionUnknown
+		return CertChainPositionUnknown
 	}
 
 	switch cert.Version {
@@ -146,17 +147,17 @@ func ChainPosition(cert *x509.Certificate, certChain []*x509.Certificate) string
 		switch {
 		case isSelfSigned(cert):
 			if cert == certChain[0] {
-				return certChainPositionLeafSelfSigned
+				return CertChainPositionLeafSelfSigned
 			}
 
-			return certChainPositionRoot
+			return CertChainPositionRoot
 
 		default:
 			if cert == certChain[0] {
-				return certChainPositionLeaf
+				return CertChainPositionLeaf
 			}
 
-			return certChainPositionIntermediate
+			return CertChainPositionIntermediate
 		}
 
 	case 3:
@@ -169,7 +170,7 @@ func ChainPosition(cert *x509.Certificate, certChain []*x509.Certificate) string
 			// The cA boolean indicates whether the certified public key may be
 			// used to verify certificate signatures.
 			if cert.IsCA {
-				return certChainPositionRoot
+				return CertChainPositionRoot
 			}
 
 			// The Extended key usage extension indicates one or more purposes
@@ -178,7 +179,7 @@ func ChainPosition(cert *x509.Certificate, certChain []*x509.Certificate) string
 			// extension. In general, this extension will appear only in end
 			// entity certificates.
 			if cert.ExtKeyUsage != nil {
-				return certChainPositionLeafSelfSigned
+				return CertChainPositionLeafSelfSigned
 			}
 
 			// CA certs are intended for cert and CRL signing.
@@ -188,11 +189,11 @@ func ChainPosition(cert *x509.Certificate, certChain []*x509.Certificate) string
 			// Constraints` are specified.
 			switch cert.KeyUsage {
 			case cert.KeyUsage | x509.KeyUsageCertSign | x509.KeyUsageCRLSign:
-				return certChainPositionRoot
+				return CertChainPositionRoot
 			case cert.KeyUsage | x509.KeyUsageCertSign:
-				return certChainPositionRoot
+				return CertChainPositionRoot
 			default:
-				return certChainPositionLeafSelfSigned
+				return CertChainPositionLeafSelfSigned
 			}
 
 		default:
@@ -200,7 +201,7 @@ func ChainPosition(cert *x509.Certificate, certChain []*x509.Certificate) string
 			// The cA boolean indicates whether the certified public key may be
 			// used to verify certificate signatures.
 			if cert.IsCA {
-				return certChainPositionIntermediate
+				return CertChainPositionIntermediate
 			}
 
 			// The Extended key usage extension indicates one or more purposes
@@ -209,7 +210,7 @@ func ChainPosition(cert *x509.Certificate, certChain []*x509.Certificate) string
 			// extension. In general, this extension will appear only in end
 			// entity certificates.
 			if cert.ExtKeyUsage != nil {
-				return certChainPositionLeaf
+				return CertChainPositionLeaf
 			}
 
 			// CA certs are intended for cert and CRL signing.
@@ -219,18 +220,18 @@ func ChainPosition(cert *x509.Certificate, certChain []*x509.Certificate) string
 			// Constraints` are specified.
 			switch cert.KeyUsage {
 			case cert.KeyUsage | x509.KeyUsageCertSign | x509.KeyUsageCRLSign:
-				return certChainPositionIntermediate
+				return CertChainPositionIntermediate
 			case cert.KeyUsage | x509.KeyUsageCertSign:
-				return certChainPositionIntermediate
+				return CertChainPositionIntermediate
 			default:
-				return certChainPositionLeaf
+				return CertChainPositionLeaf
 			}
 
 		}
 	}
 
 	// no known match, so position unknown
-	return certChainPositionUnknown
+	return CertChainPositionUnknown
 
 }
 
@@ -258,9 +259,9 @@ func NumLeafCerts(certChain []*x509.Certificate) int {
 	for _, cert := range certChain {
 		chainPos := ChainPosition(cert, certChain)
 		switch chainPos {
-		case certChainPositionLeaf:
+		case CertChainPositionLeaf:
 			num++
-		case certChainPositionLeafSelfSigned:
+		case CertChainPositionLeafSelfSigned:
 			num++
 		}
 	}
@@ -274,7 +275,7 @@ func NumIntermediateCerts(certChain []*x509.Certificate) int {
 	var num int
 	for _, cert := range certChain {
 		chainPos := ChainPosition(cert, certChain)
-		if chainPos == certChainPositionIntermediate {
+		if chainPos == CertChainPositionIntermediate {
 			num++
 		}
 	}
@@ -290,7 +291,7 @@ func NonRootCerts(certChain []*x509.Certificate) []*x509.Certificate {
 
 	for _, cert := range certChain {
 		chainPos := ChainPosition(cert, certChain)
-		if chainPos != certChainPositionRoot {
+		if chainPos != CertChainPositionRoot {
 			nonRootCerts = append(nonRootCerts, cert)
 		}
 	}
@@ -307,9 +308,9 @@ func LeafCerts(certChain []*x509.Certificate) []*x509.Certificate {
 	for _, cert := range certChain {
 		chainPos := ChainPosition(cert, certChain)
 		switch chainPos {
-		case certChainPositionLeaf:
+		case CertChainPositionLeaf:
 			leafCerts = append(leafCerts, cert)
-		case certChainPositionLeafSelfSigned:
+		case CertChainPositionLeafSelfSigned:
 			leafCerts = append(leafCerts, cert)
 		}
 
@@ -494,7 +495,7 @@ func ExpirationStatus(cert *x509.Certificate, ageCritical time.Time, ageWarning 
 func HasWeakSignatureAlgorithm(cert *x509.Certificate, certChain []*x509.Certificate, evalRoot bool) bool {
 	chainPos := ChainPosition(cert, certChain)
 
-	if chainPos == certChainPositionRoot && !evalRoot {
+	if chainPos == CertChainPositionRoot && !evalRoot {
 		return false
 	}
 
