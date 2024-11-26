@@ -135,6 +135,10 @@ type Certificate struct {
 	Type string `json:"type"`
 }
 
+// Certificates is a collection of Certificate values from a single
+// certificate chain.
+type Certificates []Certificate
+
 // CertificateChainIssues is an aggregated collection of problems detected for
 // the certificate chain.
 type CertificateChainIssues struct {
