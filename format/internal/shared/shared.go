@@ -96,11 +96,29 @@ func LookupValidityPeriodDescription(cert *x509.Certificate) string {
 		return ValidityPeriodUNKNOWN
 	}
 
-	maxLifeSpanInTruncatedYears := int(math.Trunc(float64(maxLifeSpanInDays) / 365))
+	// Handle special case scenario for certificates which have *close* to 90
+	// days.
+	//
+	// Attempt to handle cases like Let's Encrypt certificates which have a
+	// "working" duration of 89 days and 23 hours so that we can still report
+	// them as a recognizable "90" days. We do the same for other
+	// agent-managed certificates which might buffer the time a little in the
+	// other direction.
+	//
+	// https://cert-manager.io/docs/usage/certificate/#:~:text=Note%3A%20Take%20care,remains%2090%20days).
+	// https://community.letsencrypt.org/t/lets-encrypt-in-numbers-limits-restrictions-features/37113#:~:text=Do%20you%20know%20that%20your%20Let%E2%80%99s%20encrypt%20certificate%20is%20in%20fact%20valid%20only%2089%20days%20and%2023%20hours%3F
+	if maxLifeSpanInDays == 89 || maxLifeSpanInDays == 91 {
+		maxLifeSpanInDays = 90
+	}
+
+	// Round "up" to nearest year since we're using this for certificate
+	// length display purposes and not to generate actionable (e.g., "expiring
+	// soon") alerts.
+	maxLifeSpanInRoundedYears := int(math.RoundToEven(float64(maxLifeSpanInDays) / 365))
 
 	switch {
-	case maxLifeSpanInTruncatedYears >= 1:
-		return fmt.Sprintf("%d year", maxLifeSpanInTruncatedYears)
+	case maxLifeSpanInRoundedYears >= 1:
+		return fmt.Sprintf("%d year", maxLifeSpanInRoundedYears)
 
 	default:
 		return fmt.Sprintf("%d days", maxLifeSpanInDays)
