@@ -237,7 +237,9 @@ func ChainPosition(cert *x509.Certificate, certChain []*x509.Certificate) string
 
 // MaxLifespanInDays returns the maximum lifespan in days for a given
 // certificate from the date it was issued until the time it is scheduled to
-// expire.
+// expire. This value is intentionally truncated (e.g., 1.5 days becomes 1
+// day) since the result may be used to determine when a sysadmin is notified
+// of an impending expiration (sooner is better).
 func MaxLifespanInDays(cert *x509.Certificate) (int, error) {
 	if cert == nil {
 		return 0, fmt.Errorf(
@@ -247,6 +249,13 @@ func MaxLifespanInDays(cert *x509.Certificate) (int, error) {
 	}
 
 	maxCertLifespan := cert.NotAfter.Sub(cert.NotBefore)
+
+	// While tempting, if we round up we will report more days for a
+	// certificate, which could give a false sense of safety; we take the
+	// stance that it is better to report fewer days for a certificate than
+	// more.
+	//
+	// daysMaxLifespan := int(math.RoundToEven(maxCertLifespan.Hours() / 24))
 	daysMaxLifespan := int(math.Trunc(maxCertLifespan.Hours() / 24))
 
 	return daysMaxLifespan, nil
