@@ -65,7 +65,7 @@ func (cs Certificates) LowestLeafCertLifetimeValue() float64 {
 	var lowest float64
 
 	for _, cert := range cs {
-		if cert.Type == certs.CertChainPositionLeaf {
+		if cert.Type == certs.CertChainPositionLeaf || cert.Type == certs.CertChainPositionLeafSelfSigned {
 			if lowest == 0 {
 				lowest = cert.DaysRemaining
 			}
@@ -85,7 +85,7 @@ func (cs Certificates) HighestLeafCertLifetimeValue() float64 {
 	var highest float64
 
 	for _, cert := range cs {
-		if cert.Type == certs.CertChainPositionLeaf {
+		if cert.Type == certs.CertChainPositionLeaf || cert.Type == certs.CertChainPositionLeafSelfSigned {
 			if cert.DaysRemaining > highest {
 				highest = cert.DaysRemaining
 			}
@@ -99,7 +99,7 @@ func (cs Certificates) HighestLeafCertLifetimeValue() float64 {
 // certificate in the certificate chain.
 func (cs Certificates) HasExpiringLeafs() bool {
 	for _, cert := range cs {
-		if cert.Type == certs.CertChainPositionLeaf {
+		if cert.Type == certs.CertChainPositionLeaf || cert.Type == certs.CertChainPositionLeafSelfSigned {
 			if cert.Status.Expiring {
 				return true
 			}
@@ -113,7 +113,7 @@ func (cs Certificates) HasExpiringLeafs() bool {
 // in the certificate chain.
 func (cs Certificates) HasExpiredLeafs() bool {
 	for _, cert := range cs {
-		if cert.Type == certs.CertChainPositionLeaf {
+		if cert.Type == certs.CertChainPositionLeaf || cert.Type == certs.CertChainPositionLeafSelfSigned {
 			if cert.Status.Expired {
 				return true
 			}
@@ -188,8 +188,7 @@ func (cs Certificates) HasExpiredIntermediates() bool {
 }
 
 // IntermediateExpiringFirst returns the intermediate certificate expiring
-// first in the certificate chain or a zero value Certificate if there isn't
-// one.
+// first in the certificate chain or a zero value Certificate.
 func (cs Certificates) IntermediateExpiringFirst() Certificate {
 	var lowestIntermediate Certificate
 
@@ -213,7 +212,7 @@ func (cs Certificates) IntermediateExpiringFirst() Certificate {
 // chain).
 func (cs Certificates) FirstLeaf() Certificate {
 	for _, cert := range cs {
-		if cert.Type == certs.CertChainPositionLeaf {
+		if cert.Type == certs.CertChainPositionLeaf || cert.Type == certs.CertChainPositionLeafSelfSigned {
 			return cert
 		}
 	}
@@ -227,17 +226,19 @@ func (cs Certificates) LeafExpirationDescription() string {
 	var firstLeaf Certificate
 
 	for _, cert := range cs {
-		if cert.Type == certs.CertChainPositionLeaf {
+		if cert.Type == certs.CertChainPositionLeaf || cert.Type == certs.CertChainPositionLeafSelfSigned {
 			firstLeaf = cert
 		}
 	}
 
 	switch {
-	case firstLeaf.IssuedOn.IsZero():
-		// We couldn't find a leaf cert, which means we effectively don't have
-		// a certificate chain as a leaf certificate is required to establish
-		// a TLS connection.
+	case len(cs) == 0:
 		return CertChainNotFound
+
+	case firstLeaf.IssuedOn.IsZero():
+		// We couldn't find a leaf cert. This could happen when we're
+		// monitoring an intermediates bundle on disk.
+		return CertNotPresentInChain
 
 	default:
 		return fmt.Sprintf(
@@ -248,6 +249,33 @@ func (cs Certificates) LeafExpirationDescription() string {
 	}
 }
 
+// LeafLengthDescription returns a human readable version of the certificate
+// lifetime for the first leaf certificate in the certificate chain. If a leaf
+// certificate is not available (e.g., if monitoring an intermediates bundle)
+// "N/A" will be returned.
+func (cs Certificates) LeafLengthDescription() string {
+	var firstLeaf Certificate
+
+	for _, cert := range cs {
+		if cert.Type == certs.CertChainPositionLeaf || cert.Type == certs.CertChainPositionLeafSelfSigned {
+			firstLeaf = cert
+		}
+	}
+
+	switch {
+	case len(cs) == 0:
+		return CertChainNotFound
+
+	case firstLeaf.IssuedOn.IsZero():
+		// We couldn't find a leaf cert. This could happen when we're
+		// monitoring an intermediates bundle on disk.
+		return "N/A"
+
+	default:
+		return firstLeaf.ValidityPeriodDescription
+	}
+}
+
 // IntermediateExpirationDescription returns a human readable version of the
 // expiration details for the intermediate certificate expiring first in the
 // certificate chain.
@@ -255,6 +283,9 @@ func (cs Certificates) IntermediateExpirationDescription() string {
 	oldestIntermediate := cs.IntermediateExpiringFirst()
 
 	switch {
+	case len(cs) == 0:
+		return CertChainNotFound
+
 	case oldestIntermediate.IssuedOn.IsZero():
 		return CertNotPresentInChain
 
