@@ -364,7 +364,7 @@ func pkixNameEqual(name1 pkix.Name, name2 pkix.Name) bool {
 		strings.Join(name1.Country, ",") == strings.Join(name2.Country, ",")
 }
 
-// ErrorsToStrings converts a collectin of error interfaces to string values.
+// ErrorsToStrings converts a collection of error interfaces to string values.
 func ErrorsToStrings(errs []error) []string {
 	stringErrs := make([]string, 0, len(errs))
 	for _, err := range errs {
