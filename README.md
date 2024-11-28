@@ -17,6 +17,7 @@ with the `check_cert` plugin from the `atc0005/check-cert` project.
 - [Status](#status)
 - [Contributions](#contributions)
 - [Features](#features)
+- [Additional notes](#additional-notes)
 - [Changelog](#changelog)
 - [Examples](#examples)
   - [Imports](#imports)
@@ -34,19 +35,20 @@ certificate metadata payloads in JSON format.
 Using this library, the `check_cert` plugin (from the `atc0005/check-cert`
 project) creates fixed format version payloads. Those payloads (using a
 different library), are embedded in monitoring plugin output where they can
-later be extracted and decoded and then be unmarshalled back into a specific
+later be extracted and decoded and then unmarshalled back into a specific
 format version of a native Go type provided by this project.
 
-This library exists to allow the `check_cert` plugin to easily generate
-certificate metadata payloads and various other tools to unpack them for
-reporting purposes.
+This library exists to allow the `check_cert` plugin (and other client code)
+to easily generate certificate metadata payloads and various other tools to
+unpack them for analysis, reporting and actionable/automation purposes.
 
 ## Status
 
 While attempts are made to provide stability, this codebase is subject to
 change without notice and may break client code that depends on it. You are
 encouraged to [vendor](#references) this package if you find it useful until
-such time that the API is considered stable.
+such time that the API is considered stable. You are also encouraged to only
+use tagged (non-alpha/beta) releases for the same reason.
 
 The specific certificate metadata payload format versions provided by this
 project are *intended* to be supported indefinitely once the format is
@@ -57,7 +59,10 @@ releasing a new format version with those changes.
 
 This library has a very narrow focus. While PRs may be accepted to resolve
 typos, logic errors and enhance documentation, behavioral changes and feature
-additions will likely be rejected as out of scope.
+additions will likely be rejected as out of scope. If there is any doubt,
+please [open a new
+discussion](https://github.com/atc0005/cert-payload/discussions/new/choose)
+and ask for feedback.
 
 ## Features
 
@@ -84,6 +89,13 @@ additions will likely be rejected as out of scope.
       explicitly change the certificate metadata payload format version
       they're working with; updating this dependency should not break payload
       generation or consumption
+
+## Additional notes
+
+For additional details, please see the `formats.md` doc file for design notes
+and potential future feature implementation work. See also
+[GH-46](https://github.com/atc0005/cert-payload/issues/46) for initial
+implementation notes and related GH issues.
 
 ## Changelog
 
@@ -136,9 +148,10 @@ within plugin output (for later retrieval and parsing).
 
 ### Decoding a payload
 
-See the Nagios XI API example in this repo for how to combine using this
-library and another library to extract, decode and unmarshal an embedded
-payload to a specific format version of a certificate metadata payload.
+See the Nagios XI API example in this repo for how to combine the use of this
+library with the `atc0005/go-nagios` library to extract, decode and unmarshal
+an embedded payload to a specific format version of a certificate metadata
+payload.
 
 ## License
 
