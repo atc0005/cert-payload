@@ -48,7 +48,7 @@ var (
 
 	// ErrPayloadFormatVersionTooOld indicates that a specified payload format
 	// version is no longer supported.
-	ErrPayloadFormatVersionTooOld = errors.New("request payload format version is no longer supported")
+	ErrPayloadFormatVersionTooOld = errors.New("requested payload format version is no longer supported")
 
 	// ErrPayloadFormatVersionTooNew indicates that a specified payload format
 	// version is not supported by this package release version.

@@ -9,7 +9,6 @@ package format1
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 )
@@ -34,8 +33,10 @@ func Decode(dest *CertChainPayload, input io.Reader, allowUnknownFields bool) er
 
 	// If there is more than one object, something is off.
 	if dec.More() {
-		return errors.New(
-			"input contains multiple JSON objects; only one JSON object is supported",
+		return fmt.Errorf(
+			"input contains multiple JSON objects;"+
+				" only one JSON object is supported: %w",
+			ErrInvalidPayloadFormat,
 		)
 	}
 
