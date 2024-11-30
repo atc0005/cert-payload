@@ -55,6 +55,18 @@ project are *intended* to be supported indefinitely once the format is
 declared stable. Any breaking changes to a format would be provided by
 releasing a new format version with those changes.
 
+> [!WARNING]
+>
+> `format0` is an unstable/development format version used for testing changes
+> in behavior prior to *potentially* including them in a later stable format
+> version. You are encouraged to use a stable format version (e.g., `1`)
+> instead of using this version.
+
+Top-level library constants are provided which identity the oldest and newest
+stable format versions along with separate constants which identify the oldest
+and newest format versions regardless of stability expectations. See those
+constants for more information.
+
 ## Contributions
 
 This library has a very narrow focus. While PRs may be accepted to resolve

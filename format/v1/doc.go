@@ -7,6 +7,8 @@
 
 // Package format1 implements the initial stable certificate payload format.
 //
-// FIXME: This is a mockup and not a real implementation. Please do not use
-// this format version until this note has been removed.
+// This and other stable format versions are subject to small compatible
+// changes as needed to fix discovered issues and clarify behavior.
+//
+// Upgrade to the latest format version for new functionality.
 package format1

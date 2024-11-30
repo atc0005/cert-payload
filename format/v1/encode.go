@@ -118,13 +118,17 @@ func Encode(inputData input.Values) ([]byte, error) {
 		certChainOriginal = nil
 	}
 
+	server := Server{
+		HostValue: inputData.Server.HostValue,
+		IPAddress: inputData.Server.IPAddress,
+	}
+
 	payload := CertChainPayload{
 		FormatVersion:     FormatVersion,
 		Errors:            shared.ErrorsToStrings(inputData.Errors),
-		TestingOutofTacos: false, // fake; force payload conflict with format version 0
 		CertChainOriginal: certChainOriginal,
 		CertChainSubset:   certChainSubset,
-		Server:            inputData.Server.HostValue,
+		Server:            server,
 		DNSName:           inputData.DNSName,
 		TCPPort:           inputData.TCPPort,
 		Issues:            certChainIssues,
