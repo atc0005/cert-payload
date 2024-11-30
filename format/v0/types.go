@@ -13,8 +13,12 @@ import (
 
 const (
 	// FormatVersion indicates the format version support provided by this
-	// package. Version 0 is the pre-release version that we'll continue to
-	// use until the types in this package stabilize.
+	// package. Version 0 is the unstable format version that we'll continue
+	// to update over time as we test new functionality for potential
+	// inclusion in a later stable format version.
+	//
+	// NOTE: You are encouraged to use a stable format version (e.g., 1) if
+	// stability is a goal.
 	FormatVersion int = 0
 )
 

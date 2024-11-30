@@ -5,10 +5,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for
 // full license information.
 
-// FIXME: This is a mockup and not a real implementation as format version 0
-// is still being actively updated; format version 1 is intended to contrast
-// with format version 0 for dev/testing purposes.
-
 package format1
 
 import (
@@ -17,14 +13,22 @@ import (
 
 const (
 	// FormatVersion indicates the format version support provided by this
-	// package. Version 1 is the first stable release version that we'll
-	// support once the provided types & behavior stabilizes.
-	//
-	// FIXME: Format version 1 (at this time) is just a placeholder to help
-	// with initial testing.
-	//
+	// package.
 	FormatVersion int = 1
 )
+
+// Server reflects the host value and resolved IP Address used to retrieve the
+// certificate chain.
+type Server struct {
+	// HostValue is the original hostname value. While usually a FQDN, this
+	// value could also be a fixed IP Address (e.g., if SNI support wasn't
+	// used to retrieve the certificate chain).
+	HostValue string `json:"host_value"`
+
+	// IPAddress is the resolved IP Address for the hostname value used to
+	// retrieve a certificate chain.
+	IPAddress string `json:"ip_address"`
+}
 
 // CertificateStatus is the overall status of a certificate.
 //
@@ -238,11 +242,6 @@ type CertChainPayload struct {
 	//
 	Errors []string `json:"errors"`
 
-	// TestingOutofTacos is a fake field used just to make sure that the
-	// "parent" type provided by this package differs from format version 0
-	// for testing purposes.
-	TestingOutofTacos bool
-
 	// CertChainOriginal is the original certificate chain entries encoded in
 	// PEM format.
 	//
@@ -254,9 +253,9 @@ type CertChainPayload struct {
 	// chain metadata. This field should always be populated.
 	CertChainSubset []Certificate `json:"cert_chain_subset"`
 
-	// Server is the FQDN or IP Address specified to the plugin which was used
-	// to retrieve the certificate chain.
-	Server string `json:"server"` // FIXME: Intentionally leaving this as a string instead of the Server type
+	// Server reflects the host value and resolved IP Address (which could be
+	// the same value) used to retrieve the certificate chain.
+	Server Server `json:"server"`
 
 	// A fully-qualified domain name or IP Address in the Subject Alternate
 	// Names (SANs) list for the leaf certificate.

@@ -18,24 +18,38 @@ import (
 	"github.com/atc0005/cert-payload/input"
 )
 
+// Minimum and Maximum supported (stable) format versions. There may be format
+// versions outside of these values but they are not considered
+// stable/supported.
 const (
-	// MaxSupportedPayloadVersion indicates the latest payload format version
-	// supported by this project. Update to the very latest project release to
-	// support the most recent format version.
-	//
-	// FIXME: Bump to `1` once the format stabilizes. Keep bumping version to
-	// reflect the most recent format version.
-	//
-	MaxSupportedPayloadVersion int = 1 // FIXME: Only for testing purposes.
+	// MaxStablePayloadVersion indicates the newest stable payload format
+	// version supported by this project. Update to the very latest project
+	// release to support the most recent stable format version.
+	MaxStablePayloadVersion int = 1
 
-	// MinSupportedPayloadVersion indicates the oldest payload format version
-	// supported by this project. Versions older than this are considered
-	// unstable and associated with early development releases and are no
-	// longer supported.
-	//
-	// FIXME: Bump to `1` once the format stabilizes.
-	//
-	MinSupportedPayloadVersion int = 0
+	// MinStablePayloadVersion indicates the oldest stable payload format
+	// version supported by this project. Versions older than this are
+	// considered unstable and associated with early development releases and
+	// are no longer supported.
+	MinStablePayloadVersion int = 1
+)
+
+// Minimum and Maximum format versions, regarding of stability expectations.
+const (
+	// UnstablePayloadVersion is the development or unstable format version.
+	// Despite the low payload format version number this format is used for
+	// ongoing development purposes. No stability guarantees are provided.
+	UnstablePayloadVersion int = 0
+
+	// MaxPayloadVersion indicates the latest payload format version provided
+	// by this project. This value does not necessarily indicate the latest
+	// stable version. Update to the very latest project release to support
+	// the most recent format version.
+	MaxPayloadVersion int = MaxStablePayloadVersion
+
+	// MinPayloadVersion indicates the minimum payload format version
+	// supported by this project.
+	MinPayloadVersion int = UnstablePayloadVersion
 )
 
 var (
@@ -48,7 +62,7 @@ var (
 
 	// ErrPayloadFormatVersionTooOld indicates that a specified payload format
 	// version is no longer supported.
-	ErrPayloadFormatVersionTooOld = errors.New("requested payload format version is no longer supported")
+	// ErrPayloadFormatVersionTooOld = errors.New("requested payload format version is no longer supported")
 
 	// ErrPayloadFormatVersionTooNew indicates that a specified payload format
 	// version is not supported by this package release version.
@@ -66,17 +80,19 @@ type minimumFormat struct {
 // processing or if an invalid payload version format is specified.
 func Encode(payloadVersion int, inputData input.Values) ([]byte, error) {
 	switch {
-	case payloadVersion < MinSupportedPayloadVersion:
-		return nil, fmt.Errorf("payload version %d specified (min supported is %d): %w",
+	case payloadVersion < MinPayloadVersion:
+		return nil, fmt.Errorf("payload version %d specified (min stable is %d, min possible is %d): %w",
 			payloadVersion,
-			MinSupportedPayloadVersion,
-			ErrPayloadFormatVersionTooOld,
+			MinStablePayloadVersion,
+			MinPayloadVersion,
+			ErrUnsupportedPayloadFormatVersion,
 		)
 
-	case payloadVersion > MaxSupportedPayloadVersion:
-		return nil, fmt.Errorf("payload version %d specified (max supported is %d): %w",
+	case payloadVersion > MaxPayloadVersion:
+		return nil, fmt.Errorf("payload version %d specified (max stable is %d, max possible is %d): %w",
 			payloadVersion,
-			MaxSupportedPayloadVersion,
+			MaxStablePayloadVersion,
+			MaxPayloadVersion,
 			ErrPayloadFormatVersionTooNew,
 		)
 
@@ -119,13 +135,13 @@ func Decode(inputPayload string, dest interface{}) error {
 	}
 
 	switch {
-	case format.Version < MinSupportedPayloadVersion:
+	case format.Version < MinPayloadVersion:
 		return fmt.Errorf("payload version %d specified: %w",
 			format.Version,
-			ErrPayloadFormatVersionTooOld,
+			ErrUnsupportedPayloadFormatVersion,
 		)
 
-	case format.Version > MaxSupportedPayloadVersion:
+	case format.Version > MaxPayloadVersion:
 		return fmt.Errorf("payload version %d specified: %w",
 			format.Version,
 			ErrPayloadFormatVersionTooNew,
@@ -154,11 +170,8 @@ func Decode(inputPayload string, dest interface{}) error {
 // metadata payloads.
 func AvailableFormatVersions() []int {
 	return []int{
-		0,
-		1, // FIXME: Fake value for testing (for now)
-		2, // FIXME: Fake value for testing
-		3, // FIXME: Fake value for testing
-		4, // FIXME: Fake value for testing
+		UnstablePayloadVersion,
+		MaxStablePayloadVersion,
 	}
 }
 
