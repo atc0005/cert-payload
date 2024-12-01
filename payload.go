@@ -173,6 +173,19 @@ func AvailableFormatVersions() []int {
 	}
 }
 
+// AvailableStableFormatVersions provides a list of all available stable
+// format versions that client applications may choose from when encoding or
+// decoding certificate metadata payloads.
+func AvailableStableFormatVersions() []int {
+	stableFormats := make([]int, 0, len(AvailableFormatVersions()))
+
+	for i := MinStablePayloadVersion; i <= MaxStablePayloadVersion; i++ {
+		stableFormats = append(stableFormats, i)
+	}
+
+	return stableFormats
+}
+
 // latestVersionEncoder is a helper function that provides the latest format
 // version Encode function.
 // func latestVersionEncoder() func(input.Values) ([]byte, error) {
