@@ -28,9 +28,7 @@ const (
 	MaxStablePayloadVersion int = 1
 
 	// MinStablePayloadVersion indicates the oldest stable payload format
-	// version supported by this project. Versions older than this are
-	// considered unstable and associated with early development releases and
-	// are no longer supported.
+	// version supported by this project.
 	MinStablePayloadVersion int = 1
 )
 
