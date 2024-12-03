@@ -19,18 +19,14 @@ import (
 	"time"
 
 	payload "github.com/atc0005/cert-payload"
-	format0 "github.com/atc0005/cert-payload/format/v0"
+	format1 "github.com/atc0005/cert-payload/format/v1"
 )
 
 // Example of parsing a previously retrieved Nagios XI API response (saved to
 // a JSON file) from the /nagiosxi/api/v1/objects/servicestatus endpoint,
 // extracting and decoding an embedded certificate metadata payload from each
 // status entry and then unmarshalling the result into a specific format
-// version (in this case format 0).
-//
-// TODO: Update this example once format version 1 is released.
-//
-//gocognit:ignore
+// version (in this case format 1).
 func Example_extractandDecodePayloadsFromNagiosXIAPI() {
 	if len(os.Args) < 2 {
 		fmt.Println("Missing input file")
@@ -71,21 +67,21 @@ func Example_extractandDecodePayloadsFromNagiosXIAPI() {
 			continue // we have some known cases of explicitly excluding payload generation
 		}
 
-		format0Payload := format0.CertChainPayload{}
-		jsonDecodeErr := payload.Decode(unencodedPayload, &format0Payload)
+		format1Payload := format1.CertChainPayload{}
+		jsonDecodeErr := payload.Decode(unencodedPayload, &format1Payload)
 		if jsonDecodeErr != nil {
 			fmt.Println("Failed to decode JSON payload from original plugin output:", jsonDecodeErr)
 			os.Exit(1)
 		}
 
-		if !format0Payload.Issues.Confirmed() {
+		if !format1Payload.Issues.Confirmed() {
 			fmt.Print(" Skipping (no cert chain issues detected)")
 			continue
 		}
 
 		fmt.Printf(
 			"\nJSON payload for %s (flagged as problematic):\n",
-			format0Payload.Server,
+			format1Payload.Server,
 		)
 
 		var prettyJSON bytes.Buffer
