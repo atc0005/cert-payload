@@ -8,6 +8,7 @@
 package format1
 
 import (
+	"crypto/x509"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -61,19 +62,12 @@ func Encode(inputData input.Values) ([]byte, error) {
 			return nil, lookupErr
 		}
 
-		var SANsEntries []string
-		if inputData.OmitSANsEntries {
-			SANsEntries = nil
-		} else {
-			SANsEntries = origCert.DNSNames
-		}
-
 		validityPeriodDescription := shared.LookupValidityPeriodDescription(origCert)
 
 		certSubset := Certificate{
 			Subject:                   origCert.Subject.String(),
 			CommonName:                origCert.Subject.CommonName,
-			SANsEntries:               SANsEntries,
+			SANsEntries:               sansEntries(origCert, inputData),
 			SANsEntriesCount:          len(origCert.DNSNames),
 			Issuer:                    origCert.Issuer.String(),
 			IssuerShort:               origCert.Issuer.CommonName,
@@ -94,17 +88,7 @@ func Encode(inputData input.Values) ([]byte, error) {
 		certChainSubset = append(certChainSubset, certSubset)
 	}
 
-	// Default to using the server FQDN or IP Address used to make the
-	// connection as our hostname value.
-	hostnameValue := inputData.Server.HostValue
-
-	// Allow the user to explicitly specify which hostname should be used
-	// for comparison against the leaf certificate. This works for a
-	// certificate retrieved by a server as well as a certificate
-	// retrieved from a file.
-	if inputData.DNSName != "" {
-		hostnameValue = inputData.DNSName
-	}
+	hostVal := hostnameValue(inputData)
 
 	certChainIssues := CertificateChainIssues{
 		MissingIntermediateCerts: shared.HasMissingIntermediateCerts(certChain),
@@ -112,7 +96,7 @@ func Encode(inputData input.Values) ([]byte, error) {
 		DuplicateCerts:           shared.HasDuplicateCertsInChain(certChain),
 		MisorderedCerts:          shared.HasMisorderedCerts(certChain),
 		ExpiredCerts:             shared.HasExpiredCerts(certChain),
-		HostnameMismatch:         shared.HasHostnameMismatch(hostnameValue, certChain),
+		HostnameMismatch:         shared.HasHostnameMismatch(hostVal, certChain),
 		SelfSignedLeafCert:       shared.HasSelfSignedLeaf(certChain),
 		WeakSignatureAlgorithm:   shared.HasWeakSignatureAlgorithm(certChain),
 	}
@@ -156,4 +140,35 @@ func Encode(inputData input.Values) ([]byte, error) {
 	}
 
 	return payloadJSON, nil
+}
+
+// sansEntries evaluates given input options and either returns all Subject
+// Alternate Names for a given certificate or nil to indicate that a sysadmin
+// opted out of recording SANs entries.
+func sansEntries(cert *x509.Certificate, inputData input.Values) []string {
+	if inputData.OmitSANsEntries {
+		return nil
+	}
+
+	return cert.DNSNames
+}
+
+// hostnameValue is a helper function that evaluates the given hostname values
+// used to perform a certificate service check and returns either the default
+// server value or a custom DNS name value (e.g., virtual host value) if one
+// was specified.
+func hostnameValue(inputData input.Values) string {
+	// Default to using the server FQDN or IP Address used to make the
+	// connection as our hostname value.
+	hostnameValue := inputData.Server.HostValue
+
+	// Allow the user to explicitly specify which hostname should be used
+	// for comparison against the leaf certificate. This works for a
+	// certificate retrieved by a server as well as a certificate
+	// retrieved from a file.
+	if inputData.DNSName != "" {
+		hostnameValue = inputData.DNSName
+	}
+
+	return hostnameValue
 }

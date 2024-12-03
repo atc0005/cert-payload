@@ -5,6 +5,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for
 // full license information.
 
+//nolint:gocognit // ignore function complexity
 package payload_test
 
 import (
@@ -28,6 +29,8 @@ import (
 // version (in this case format 0).
 //
 // TODO: Update this example once format version 1 is released.
+//
+//gocognit:ignore
 func Example_extractandDecodePayloadsFromNagiosXIAPI() {
 	if len(os.Args) < 2 {
 		fmt.Println("Missing input file")
