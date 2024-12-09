@@ -9,8 +9,10 @@ package certs
 
 import (
 	"crypto"
-	"crypto/md5" //nolint:gosec // Used to verify MD5WithRSA signatures
+	"crypto/ecdsa"
+	"crypto/md5" //nolint:gosec // used for MD5WithRSA signature verification
 	"crypto/rsa"
+	"crypto/sha1" //nolint:gosec // used for SHA1 fingerprints and signature verification
 	"crypto/x509"
 	"errors"
 	"fmt"
@@ -25,6 +27,11 @@ import (
 var (
 	// ErrMissingValue indicates that an expected value was missing.
 	ErrMissingValue = errors.New("missing expected value")
+
+	// ErrSignatureVerificationFailed indicates that a signature verification
+	// attempt between an issued certificate and an issuer certificate was
+	// unsuccessful.
+	ErrSignatureVerificationFailed = errors.New("signature verification failed")
 )
 
 // Certificate type values for display and comparison purposes.
@@ -123,39 +130,232 @@ func chainPositionV3Cert(cert *x509.Certificate) string {
 	return chainPosV3CertKeyUsage(cert)
 }
 
-// isSelfSignedMD5WithRSA is a helper function that attempts to validate
-// whether a given certificate is self-signed with the MD5WithRSA signature
-// algorithm by asserting that its signature can be validated with its own
-// public key. Any errors encountered during signature validation are assumed
-// to be an indication that a certificate is not self-signed with the
-// MD5WithRSA signature algorithm.
-func isSelfSignedMD5WithRSA(cert *x509.Certificate) bool {
+// verifySignatureMD5WithRSA is a helper function that attempts to validate a
+// MD5WithRSA signature for issuedCert using the public key from issuerCert.
+//
+// An error is returned if issuedCert signature algorithm is not MD5WithRSA or
+// issuerCert is determined to not have signed issuedCert.
+func verifySignatureMD5WithRSA(issuedCert *x509.Certificate, issuerCert *x509.Certificate) error {
+	if issuedCert.SignatureAlgorithm != x509.MD5WithRSA {
+		return fmt.Errorf(
+			"issued certificate signature algorithm not MD5WithRSA: %w",
+			ErrSignatureVerificationFailed,
+		)
+	}
+
 	h := md5.New() //nolint:gosec // not using for cryptographic purposes
 
-	// If MD5 hash generation of the raw ASN.1 DER content fails we'll assume
-	// not self-signed.
-	if _, err := h.Write(cert.RawTBSCertificate); err != nil {
-		return false
+	// If MD5 hash generation of the raw ASN.1 DER content fails we'll know
+	// that we're not working with a MD5 signature.
+	if _, err := h.Write(issuedCert.RawTBSCertificate); err != nil {
+		return fmt.Errorf(
+			"%w: %w",
+			ErrSignatureVerificationFailed,
+			err,
+		)
 	}
 
 	hashedBytes := h.Sum(nil)
 
-	if pub, ok := cert.PublicKey.(*rsa.PublicKey); ok {
-		md5RSASigVerifyErr := rsa.VerifyPKCS1v15(
-			pub, crypto.MD5, hashedBytes, cert.Signature,
+	pub, validRSAPublicKey := issuerCert.PublicKey.(*rsa.PublicKey)
+
+	if !validRSAPublicKey {
+		return fmt.Errorf(
+			"issuer certificate public key not in RSA format: %w",
+			ErrSignatureVerificationFailed,
 		)
-
-		switch {
-		case md5RSASigVerifyErr != nil:
-			return false
-
-		default:
-			// Self-signed MD5 signature verified, so self-signed.
-			return true
-		}
 	}
 
-	return false
+	md5RSASigVerifyErr := rsa.VerifyPKCS1v15(
+		pub, crypto.MD5, hashedBytes, issuedCert.Signature,
+	)
+
+	if md5RSASigVerifyErr != nil {
+		return fmt.Errorf(
+			"%w: %w",
+			md5RSASigVerifyErr,
+			ErrSignatureVerificationFailed,
+		)
+	}
+
+	// Signature verified.
+	return nil
+}
+
+// verifySignatureSHA1WithRSA is a helper function that attempts to validate a
+// SHA1WithRSA signature for issuedCert using the public key from issuerCert.
+//
+// An error is returned if issuedCert signature algorithm is not SHA1WithRSA
+// or issuerCert is determined to not have signed issuedCert.
+func verifySignatureSHA1WithRSA(issuedCert *x509.Certificate, issuerCert *x509.Certificate) error {
+	if issuedCert.SignatureAlgorithm != x509.SHA1WithRSA {
+		return fmt.Errorf(
+			"issued certificate signature algorithm not SHA1WithRSA: %w",
+			ErrSignatureVerificationFailed,
+		)
+	}
+
+	h := sha1.New() //nolint:gosec // not using for cryptographic purposes
+
+	// If SHA1 hash generation of the raw ASN.1 DER content fails we'll know
+	// that we're not working with a SHA1 signature.
+	if _, err := h.Write(issuedCert.RawTBSCertificate); err != nil {
+		return fmt.Errorf(
+			"%w: %w",
+			ErrSignatureVerificationFailed,
+			err,
+		)
+	}
+
+	hashedBytes := h.Sum(nil)
+
+	pub, validRSAPublicKey := issuerCert.PublicKey.(*rsa.PublicKey)
+
+	if !validRSAPublicKey {
+		return fmt.Errorf(
+			"issuer certificate public key not in RSA format: %w",
+			ErrSignatureVerificationFailed,
+		)
+	}
+
+	sha1RSASigVerifyErr := rsa.VerifyPKCS1v15(
+		pub, crypto.SHA1, hashedBytes, issuedCert.Signature,
+	)
+
+	if sha1RSASigVerifyErr != nil {
+		return fmt.Errorf(
+			"%w: %w",
+			sha1RSASigVerifyErr,
+			ErrSignatureVerificationFailed,
+		)
+	}
+
+	// Signature verified.
+	return nil
+}
+
+// verifySignatureECDSAWithSHA1 is a helper function that attempts to validate
+// a ECDSAWithSHA1 signature for issuedCert using the public key from
+// issuerCert.
+//
+// An error is returned if issuedCert signature algorithm is not ECDSAWithSHA1
+// or issuerCert is determined to not have signed issuedCert.
+func verifySignatureECDSAWithSHA1(issuedCert *x509.Certificate, issuerCert *x509.Certificate) error {
+	if issuedCert.SignatureAlgorithm != x509.ECDSAWithSHA1 {
+		return fmt.Errorf(
+			"issued certificate signature algorithm not ECDSAWithSHA1: %w",
+			ErrSignatureVerificationFailed,
+		)
+	}
+
+	h := sha1.New() //nolint:gosec // not using for cryptographic purposes
+
+	// If SHA1 hash generation of the raw ASN.1 DER content fails we'll know
+	// that we're not working with a SHA1 signature.
+	if _, err := h.Write(issuedCert.RawTBSCertificate); err != nil {
+		return fmt.Errorf(
+			"%w: %w",
+			ErrSignatureVerificationFailed,
+			err,
+		)
+	}
+
+	hashedBytes := h.Sum(nil)
+
+	pub, validECDSAPublicKey := issuerCert.PublicKey.(*ecdsa.PublicKey)
+
+	if !validECDSAPublicKey {
+		return fmt.Errorf(
+			"issuer certificate public key not in ECDSA format: %w",
+			ErrSignatureVerificationFailed,
+		)
+	}
+
+	signatureValid := ecdsa.VerifyASN1(
+		pub, hashedBytes, issuedCert.Signature,
+	)
+
+	if !signatureValid {
+		return fmt.Errorf(
+			"ECDSA signature not valid: %w",
+			ErrSignatureVerificationFailed,
+		)
+	}
+
+	// Signature verified.
+	return nil
+}
+
+// verifySignature is used to verify that the signature on issuedCert is a
+// valid signature from issuerCert.
+//
+// NOTE: This function attempts to perform signature verification for
+// signature algorithms which current versions of Go reject with a
+// x509.InsecureAlgorithmError error value.
+//
+// This explicit evaluation is not done for cryptographic/security purposes,
+// but rather for best-effort identification; because evaluated certificate
+// chains are managed by sysadmins and already under their control the outcome
+// of this logic grants no more access than was already present.
+func verifySignature(issuedCert *x509.Certificate, issuerCert *x509.Certificate) error {
+	if issuedCert.Issuer.String() != issuerCert.Subject.String() {
+		return fmt.Errorf(
+			"issuer and subject X.509 distinguished name mismatch: %w",
+			ErrSignatureVerificationFailed,
+		)
+	}
+
+	// Regarding the specific order of issuer/issued certs in signature
+	// verification process:
+	//
+	// https://github.com/google/certificate-transparency-go/blob/3445599468fa7fe152d9c809ba8f2527d72768b8/x509/x509.go#L1004-L1030
+	//
+	// parent.CheckSignature(c.SignatureAlgorithm, c.RawTBSCertificate, c.Signature)
+	sigVerifyErr := issuerCert.CheckSignature(
+		issuedCert.SignatureAlgorithm,
+		issuedCert.RawTBSCertificate,
+		issuedCert.Signature,
+	)
+
+	switch {
+	// Handle verification of signature algorithms no longer supported by
+	// current Go releases (declared insecure).
+	case errors.Is(sigVerifyErr, x509.InsecureAlgorithmError(issuedCert.SignatureAlgorithm)):
+		switch {
+		case issuedCert.SignatureAlgorithm == x509.MD5WithRSA:
+			return verifySignatureMD5WithRSA(issuedCert, issuerCert)
+
+		case issuedCert.SignatureAlgorithm == x509.SHA1WithRSA:
+			// https://github.com/golang/go/issues/41682
+			return verifySignatureSHA1WithRSA(issuedCert, issuerCert)
+
+		case issuedCert.SignatureAlgorithm == x509.ECDSAWithSHA1:
+			// https://github.com/golang/go/issues/41682
+			return verifySignatureECDSAWithSHA1(issuedCert, issuerCert)
+
+		default:
+			// Go has declared an algorithm as insecure that we're not
+			// aware of.
+			return fmt.Errorf(
+				"unsupported signature algorithm %s (please submit bug report): %w: %w",
+				issuedCert.SignatureAlgorithm,
+				sigVerifyErr,
+				ErrSignatureVerificationFailed,
+			)
+		}
+
+	case sigVerifyErr != nil:
+		// Some other signature verification error aside from
+		// InsecureAlgorithmError.
+		return fmt.Errorf(
+			"%w: %w",
+			sigVerifyErr,
+			ErrSignatureVerificationFailed,
+		)
+
+	default:
+		return nil
+	}
 }
 
 // isSelfSigned is a helper function that attempts to validate whether a given
@@ -167,38 +367,18 @@ func isSelfSigned(cert *x509.Certificate) bool {
 		return false
 	}
 
-	sigVerifyErr := cert.CheckSignature(
-		cert.SignatureAlgorithm,
-		cert.RawTBSCertificate,
-		cert.Signature,
-	)
+	sigVerifyErr := verifySignature(cert, cert)
 
 	switch {
-	// No problems verifying self-signed signature; conclusively self-signed.
-	case sigVerifyErr == nil:
-		return true
-
-	// Examine signature verification errors; we could still be dealing with a
-	// self-signed certificate.
-	case errors.Is(sigVerifyErr, x509.InsecureAlgorithmError(cert.SignatureAlgorithm)):
-		// Handle MD5 signature verification ourselves since Go considers
-		// the MD5 algorithm to be insecure (rightly so).
-		if cert.SignatureAlgorithm == x509.MD5WithRSA {
-			return isSelfSignedMD5WithRSA(cert)
-		}
-
-		// TODO: Do we need to check this ourselves in Go 1.18?
-		// if cert.SignatureAlgorithm == x509.SHA1WithRSA {
-		// }
-
-		// We'll default to assuming that insecure algorithm errors indicate a
-		// certificate is not self-signed.
+	case sigVerifyErr != nil:
+		// Some other signature verification error, which we'll interpret as a
+		// failure due to the certificate not being self-signed.
 		return false
 
-	// Some other signature verification error, which we'll interpret as a
-	// failure due to the certificate not being self-signed.
 	default:
-		return false
+		// No problems verifying self-signed signature; conclusively
+		// self-signed.
+		return true
 	}
 }
 
