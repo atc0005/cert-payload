@@ -12,6 +12,7 @@ package shared
 import (
 	"crypto/x509"
 	"crypto/x509/pkix"
+	"errors"
 	"fmt"
 	"math"
 	"strings"
@@ -345,9 +346,30 @@ func HasMisorderedCerts(certChain []*x509.Certificate) bool {
 
 		// Verify the current certificate is signed by the next certificate's
 		// public key.
-		if err := currentCert.CheckSignatureFrom(nextCert); err != nil {
+		sigVerifyErr := nextCert.CheckSignature(
+			currentCert.SignatureAlgorithm,
+			currentCert.RawTBSCertificate,
+			currentCert.Signature,
+		)
+
+		switch {
+		case errors.Is(sigVerifyErr, x509.InsecureAlgorithmError(currentCert.SignatureAlgorithm)):
+			// NOTE: We ignore x509.InsecureAlgorithmError errors and instead
+			// rely solely on issuer/subject mismatches as we could be
+			// evaluating a certificate with a deprecated signature algorithm
+			// that current versions of Go object to.
+			//
+			// https://github.com/atc0005/cert-payload/issues/72
+			continue
+
+		case sigVerifyErr != nil:
 			// return fmt.Errorf("signature verification failed between certificate at index %d and %d: %w", i, i+1, err)
 			return true
+
+		default:
+			// Current certificate is signed by the next certificate's public
+			// key. Check the next cert.
+			continue
 		}
 	}
 
