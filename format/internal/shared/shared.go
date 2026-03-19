@@ -97,31 +97,54 @@ func LookupValidityPeriodDescription(cert *x509.Certificate) string {
 		return ValidityPeriodUNKNOWN
 	}
 
-	// Handle special case scenario for certificates which have *close* to 90
-	// days.
+	// Evaluate non-rounded number of years to prevent rounding from declaring
+	// a certificate as "1 year" when it may instead be a certificate issued
+	// after 2026-03-15 per "SC-081: Introduce Schedule of Reducing Validity
+	// and Data Reuse Periods". For example, a six month renewal cycle
+	// certificate should not be listed as "1 year":
 	//
-	// Attempt to handle cases like Let's Encrypt certificates which have a
-	// "working" duration of 89 days and 23 hours so that we can still report
-	// them as a recognizable "90" days. We do the same for other
-	// agent-managed certificates which might buffer the time a little in the
-	// other direction.
+	// | Date           | Maximum Certificate Validity | Renewal Cycle |
+	// | -------------- | ---------------------------- | ------------- |
+	// | March 15, 2026 | 200 Days                     | 6 Month       |
+	// | March 15, 2027 | 100 Days                     | 3 Months      |
+	// | March 15, 2028 | 47 days                      | 1 Month       |
 	//
-	// https://cert-manager.io/docs/usage/certificate/#:~:text=Note%3A%20Take%20care,remains%2090%20days).
-	// https://community.letsencrypt.org/t/lets-encrypt-in-numbers-limits-restrictions-features/37113#:~:text=Do%20you%20know%20that%20your%20Let%E2%80%99s%20encrypt%20certificate%20is%20in%20fact%20valid%20only%2089%20days%20and%2023%20hours%3F
-	if maxLifeSpanInDays == 89 || maxLifeSpanInDays == 91 {
-		maxLifeSpanInDays = 90
-	}
-
-	// Round "up" to nearest year since we're using this for certificate
-	// length display purposes and not to generate actionable (e.g., "expiring
-	// soon") alerts.
-	maxLifeSpanInRoundedYears := int(math.RoundToEven(float64(maxLifeSpanInDays) / 365))
+	// See also:
+	//  - https://github.com/cabforum/servercert/pull/553
+	maxLifeSpanInYears := float64(maxLifeSpanInDays) / 365
 
 	switch {
-	case maxLifeSpanInRoundedYears >= 1:
+	case maxLifeSpanInYears >= 1:
+		// When dealing with with multiple years allow rounding up.
+		maxLifeSpanInRoundedYears := int(math.Round(maxLifeSpanInYears))
+
 		return fmt.Sprintf("%d year", maxLifeSpanInRoundedYears)
 
+	case maxLifeSpanInYears >= 0.8:
+		// Make a special case for validity periods *close* to a year but not
+		// quite as low as the 6 month renewal cycle listed in "SC-081:
+		// Introduce Schedule of Reducing Validity and Data Reuse Periods".
+		// While this may apply more to custom CA issued certs, we attempt to
+		// provide some leeway for valid CA issued certs using a custom
+		// validity period.
+		return fmt.Sprintf("%d year", 1)
+
 	default:
+		// Handle special case scenario for certificates which have *close* to
+		// 90 days.
+		//
+		// Attempt to handle cases like Let's Encrypt certificates which have
+		// a "working" duration of 89 days and 23 hours so that we can still
+		// report them as a recognizable "90" days. We do the same for other
+		// agent-managed certificates which might buffer the time a little in
+		// the other direction.
+		//
+		// https://cert-manager.io/docs/usage/certificate/#:~:text=Note%3A%20Take%20care,remains%2090%20days).
+		// https://community.letsencrypt.org/t/lets-encrypt-in-numbers-limits-restrictions-features/37113#:~:text=Do%20you%20know%20that%20your%20Let%E2%80%99s%20encrypt%20certificate%20is%20in%20fact%20valid%20only%2089%20days%20and%2023%20hours%3F
+		if maxLifeSpanInDays == 89 || maxLifeSpanInDays == 91 {
+			maxLifeSpanInDays = 90
+		}
+
 		return fmt.Sprintf("%d days", maxLifeSpanInDays)
 	}
 }
