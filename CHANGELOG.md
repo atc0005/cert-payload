@@ -26,6 +26,21 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.8.0] - 2026-03-19
+
+### Changed
+
+- (GH-85) CI Dependency: Bump github/codeql-action from 3 to 4
+- (GH-87) CI Dependency: Bump actions/checkout from 4 to 6
+
+### Fixed
+
+- (GH-91) Apply staticcheck quickfix QF1002
+- (GH-94) Update `ValidityPeriodDescription` behavior
+  - potentially a "breaking" change as the behavior is slightly different than
+    before
+  - see GH issue for details
+
 ## [v0.7.1] - 2024-12-11
 
 ### Changed
@@ -99,7 +114,8 @@ Add current code used in `atc0005/check-cert` prototype to be used when
 generating an encoded certificate chain metadata payload for inclusion in
 plugin output.
 
-[Unreleased]: https://github.com/atc0005/cert-payload/compare/v0.7.1...HEAD
+[Unreleased]: https://github.com/atc0005/cert-payload/compare/v0.8.0...HEAD
+[v0.8.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.8.0
 [v0.7.1]: https://github.com/atc0005/cert-payload/releases/tag/v0.7.1
 [v0.7.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.7.0
 [v0.6.1]: https://github.com/atc0005/cert-payload/releases/tag/v0.6.1
