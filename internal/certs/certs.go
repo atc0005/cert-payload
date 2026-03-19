@@ -321,15 +321,15 @@ func verifySignature(issuedCert *x509.Certificate, issuerCert *x509.Certificate)
 	// Handle verification of signature algorithms no longer supported by
 	// current Go releases (declared insecure).
 	case errors.Is(sigVerifyErr, x509.InsecureAlgorithmError(issuedCert.SignatureAlgorithm)):
-		switch {
-		case issuedCert.SignatureAlgorithm == x509.MD5WithRSA:
+		switch issuedCert.SignatureAlgorithm {
+		case x509.MD5WithRSA:
 			return verifySignatureMD5WithRSA(issuedCert, issuerCert)
 
-		case issuedCert.SignatureAlgorithm == x509.SHA1WithRSA:
+		case x509.SHA1WithRSA:
 			// https://github.com/golang/go/issues/41682
 			return verifySignatureSHA1WithRSA(issuedCert, issuerCert)
 
-		case issuedCert.SignatureAlgorithm == x509.ECDSAWithSHA1:
+		case x509.ECDSAWithSHA1:
 			// https://github.com/golang/go/issues/41682
 			return verifySignatureECDSAWithSHA1(issuedCert, issuerCert)
 
@@ -679,20 +679,20 @@ func HasWeakSignatureAlgorithm(cert *x509.Certificate, certChain []*x509.Certifi
 		return false
 	}
 
-	switch {
-	case cert.SignatureAlgorithm == x509.MD2WithRSA:
+	switch cert.SignatureAlgorithm {
+	case x509.MD2WithRSA:
 		return true
 
-	case cert.SignatureAlgorithm == x509.MD5WithRSA:
+	case x509.MD5WithRSA:
 		return true
 
-	case cert.SignatureAlgorithm == x509.SHA1WithRSA:
+	case x509.SHA1WithRSA:
 		return true
 
-	case cert.SignatureAlgorithm == x509.DSAWithSHA1:
+	case x509.DSAWithSHA1:
 		return true
 
-	case cert.SignatureAlgorithm == x509.ECDSAWithSHA1:
+	case x509.ECDSAWithSHA1:
 		return true
 
 	default:
