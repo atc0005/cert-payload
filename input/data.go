@@ -24,8 +24,8 @@ type Server struct {
 
 // Values is a collection of input data values that was provided to the plugin
 // (e.g., CLI flags), gathered by the plugin (e.g., CertChain) without any
-// sysadmin-specified filtering applied (e.g., "ignore expiring intermediates"
-// to create a certificate metadata payload.
+// sysadmin-specified filtering applied (e.g., "ignore expiring
+// intermediates") to create a certificate metadata payload.
 type Values struct {
 	// CertChainOriginal is the original certificate chain entries as-is
 	// without any "problematic" entries removed.

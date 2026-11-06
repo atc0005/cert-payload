@@ -134,23 +134,23 @@ think to record myself at the time the ideas were rapidly occurring to me.
 
 > [!NOTE]
 >
-> This content was originally written on 2024-11-09 based on the (vague)
-> memories from 2024-11-11.
+> This content was originally written on 2024-11-11 based on the (vague)
+> memories from 2024-11-09.
 
 ### Content
 
-As of the v0.20.1 release (of the atc0005/check-cert project), optional
-support for adding a cert payload to plugin output was added. The payload
-format is tracked extrenally in the cert-payload project and at present is
-tightly coupled with the payload emitted by the check-cert project's
-check_cert plugin.
+As of the v0.20.1 release of the atc0005/check-cert project, optional support
+for adding a cert payload to plugin output was added. The payload format is
+tracked externally in the cert-payload project and at present is tightly
+coupled with the payload emitted by the check-cert project's check_cert
+plugin.
 
 When I modified a field in the cert-payload project I bumped the version to
 v0.4.0 from v0.3.0 and am preparing the check-cert project to reflect that
 change in the next release.
 
 I haven't updated the cert-reports reporting tool to make use of the cert
-payload yet, but if I had then updating the cert-payload dependency from
+payload yet, but if I had, then updating the cert-payload dependency from
 v0.3.0 to v0.4.0 would have broken the build.
 
 I plan to move the contents of the payload.go file from the v0.20.1 release to
@@ -188,7 +188,7 @@ specifying the format version and creating the payload and then later decoding
 that payload. The current thinking is that the client code (e.g., reporting
 tool retrieving the payload from Nagios XI API) would provide the retrieved,
 Ascii85 decoded (and maybe decompressed) payload and the cert-payload project
-would unmarshal to the support format version type.
+would unmarshal to the supported format version type.
 
 > [!NOTE]
 >
@@ -276,7 +276,7 @@ Continuing from the `formats` (or `format`) subdirectory notes:
 
 Each format subdirectory should be self-contained only as needed, keeping most
 of the non-format specific logic at a shared higher level to prevent code
-duplication. As needed, code should be copied within a specific format version
+duplication. As needed, code should be copied into a specific format version
 subdirectory in order to allow newer formats to deviate in behavior while
 keeping older formats stable/reliable.
 
