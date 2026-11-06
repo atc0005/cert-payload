@@ -35,7 +35,8 @@ func Example_extractandDecodePayloadsFromNagiosXIAPI() {
 
 	sampleInputFile := os.Args[1]
 
-	jsonInput, readErr := os.ReadFile(filepath.Clean(sampleInputFile))
+	jsonInput, readErr := os.ReadFile(filepath.Clean(sampleInputFile)) // #nosec G703 -- path is for illustration purposes only
+
 	if readErr != nil {
 		fmt.Println("Failed to read sample input file:", readErr)
 		os.Exit(1)
