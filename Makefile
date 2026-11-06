@@ -44,7 +44,7 @@ lintinstall:
 	staticcheck --version
 
 	@echo Installing latest stable golangci-lint version per official installation script ...
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin
+	curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b $(shell go env GOPATH)/bin
 	golangci-lint --version
 
 	@echo "Finished updating linting tools"
