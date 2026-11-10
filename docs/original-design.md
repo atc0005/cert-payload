@@ -16,10 +16,12 @@
 
 ## Status
 
-These notes are being compiled on 2024-11-28 from recent work and some paper
-notes that I'll be (mostly) including here 1:1. Those paper notes were jotted
-down from memory from an "ah hah!" moment I had while driving a few days
-prior.
+These notes were compiled on 2024-11-28 from work leading up to promoting
+`format1` as the first stable metadata format version.
+
+The notes in this section are included mostly 1:1 from paper scratch notes.
+Those notes were jotted down from memory from an "ah hah!" moment I had while
+driving a few days prior.
 
 Some of the ideas presented have been implemented towards a `v0.7.0` library
 release, many of the better more ergonomic ideas are pending further planning
