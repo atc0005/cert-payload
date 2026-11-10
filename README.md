@@ -15,6 +15,9 @@ with the `check_cert` plugin from the `atc0005/check-cert` project.
 
 - [Overview](#overview)
 - [Status](#status)
+  - [Stability goals](#stability-goals)
+  - [Format versions](#format-versions)
+  - [Breaking changes](#breaking-changes)
 - [Contributions](#contributions)
 - [Features](#features)
 - [Additional notes](#additional-notes)
@@ -44,16 +47,28 @@ unpack them for analysis, reporting and actionable/automation purposes.
 
 ## Status
 
+### Stability goals
+
 While attempts are made to provide stability, this codebase is subject to
 change without notice and may break client code that depends on it. You are
 encouraged to [vendor](#references) this package if you find it useful until
 such time that the API is considered stable. You are also encouraged to only
 use tagged (non-alpha/beta) releases for the same reason.
 
-The specific certificate metadata payload format versions provided by this
+### Format versions
+
+> [!NOTE]
+>
+> The specific certificate metadata payload format versions provided by this
 project are *intended* to be supported indefinitely once the format is
-declared stable. Any breaking changes to a format would be provided by
-releasing a new format version with those changes.
+declared stable.
+
+Top-level library constants are provided which identity the oldest and newest
+stable format versions along with separate constants which identify the oldest
+and newest format versions regardless of stability expectations. See those
+constants for more information.
+
+### Breaking changes
 
 > [!WARNING]
 >
@@ -62,19 +77,26 @@ releasing a new format version with those changes.
 > version. You are encouraged to use a stable format version (e.g., `1`)
 > instead of using this version.
 
-Top-level library constants are provided which identity the oldest and newest
-stable format versions along with separate constants which identify the oldest
-and newest format versions regardless of stability expectations. See those
-constants for more information.
+`format1` and other stable format versions are subject to small compatible
+changes as needed to fix discovered issues and clarify behavior.
+
+Breaking changes to `format1` version and later are handled by creating a new
+format version with those changes. This includes (but may not be limited to):
+
+- modifying existing fields
+- adding new fields
+
+This stance is taken to avoid affecting client code which may make assumptions
+based on increasing the generated payload size.
 
 ## Contributions
 
 This library has a very narrow focus. While PRs may be accepted to resolve
 typos, logic errors and enhance documentation, behavioral changes and feature
-additions will likely be rejected as out of scope. If there is any doubt,
-please [open a new
+additions may be rejected as out of scope. Please [open a new
 discussion](https://github.com/atc0005/cert-payload/discussions/new/choose)
-and ask for feedback.
+and ask for feedback before investing significant effort into providing pull
+requests for review.
 
 ## Features
 
@@ -104,10 +126,16 @@ and ask for feedback.
 
 ## Additional notes
 
-For additional details, please see the `formats.md` doc file for design notes
-and potential future feature implementation work. See also
-[GH-46](https://github.com/atc0005/cert-payload/issues/46) for initial
-implementation notes and related GH issues.
+For additional details, please see:
+
+- the [format versions history](./format/CHANGES.md) doc for notable changes
+  to the payload formats
+- the [pkg.go.dev](https://pkg.go.dev/github.com/atc0005/cert-payload) site
+  for usage details not covered by this README file
+- the [docs path](./docs/) for design notes and potential future feature
+  implementation work
+- [GH-46](https://github.com/atc0005/cert-payload/issues/46) for initial
+  implementation notes and related GH issues
 
 ## Changelog
 
