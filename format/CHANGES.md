@@ -12,15 +12,20 @@ entries that are unclear (or incomplete) in this document.
 
 ### `format2`
 
-Not yet released.
+> [!WARNING]
+>
+> Not yet released.
 
-| Change      | Pull Request | Release     |
-| ----------- | ------------ | ----------- |
-| PLACEHOLDER | PLACEHOLDER  | PLACEHOLDER |
+v0.9.0 is the follow-up stable format release. New fields (see below) were
+added in this format release.
+
+| Change                         | Pull Request | Release                                                               |
+| ------------------------------ | ------------ | --------------------------------------------------------------------- |
+| Add `owners` multi-value field | PLACEHOLDER  | [v0.9.0](https://github.com/atc0005/cert-payload/releases/tag/v0.9.0) |
 
 ### `format1`
 
-v0.7.0 was the initial stable format release.
+v0.7.0 is the initial stable format release.
 
 Behavioral changes since this release include:
 
