@@ -26,6 +26,46 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.8.0] - 2026-03-19
+
+### Changed
+
+- (GH-85) CI Dependency: Bump github/codeql-action from 3 to 4
+- (GH-87) CI Dependency: Bump actions/checkout from 4 to 6
+
+### Fixed
+
+- (GH-91) Apply staticcheck quickfix QF1002
+- (GH-94) Update `ValidityPeriodDescription` behavior
+  - potentially a "breaking" change as the behavior is slightly different than
+    before
+  - see GH issue for details
+
+## [v0.7.1] - 2024-12-11
+
+### Changed
+
+- (GH-76) Adjust misordered chain logic
+- (GH-77) Refactor self-signed signature handling
+
+## [v0.7.0] - 2024-12-03
+
+### Added
+
+- (GH-64) Add initial support for encoding/decoding cert payloads
+- (GH-65) Add Certificates collection type & initial methods
+- (GH-69) Promote v1 to stable format
+
+### Changed
+
+- (GH-67) Note why certs.MaxLifespanInDays truncates result
+
+### Fixed
+
+- (GH-45) godoc formatting tweaks
+- (GH-66) Update validity period description logic
+- (GH-68) Refactor logic to resolve linting errors
+
 ## [v0.6.1] - 2024-11-17
 
 ### Changed
@@ -74,7 +114,10 @@ Add current code used in `atc0005/check-cert` prototype to be used when
 generating an encoded certificate chain metadata payload for inclusion in
 plugin output.
 
-[Unreleased]: https://github.com/atc0005/cert-payload/compare/v0.6.1...HEAD
+[Unreleased]: https://github.com/atc0005/cert-payload/compare/v0.8.0...HEAD
+[v0.8.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.8.0
+[v0.7.1]: https://github.com/atc0005/cert-payload/releases/tag/v0.7.1
+[v0.7.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.7.0
 [v0.6.1]: https://github.com/atc0005/cert-payload/releases/tag/v0.6.1
 [v0.6.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.6.0
 [v0.5.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.5.0
