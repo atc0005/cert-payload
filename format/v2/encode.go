@@ -125,16 +125,17 @@ func Encode(inputData input.Values) ([]byte, error) {
 	}
 
 	payload := CertChainPayload{
-		FormatVersion:     FormatVersion,
-		Errors:            shared.ErrorsToStrings(inputData.Errors),
-		CertChainOriginal: certChainOriginal,
-		CertChainSubset:   certChainSubset,
-		Owners:            textutils.DedupeListIgnoreCase(inputData.Owners),
-		Server:            server,
-		DNSName:           inputData.DNSName,
-		TCPPort:           inputData.TCPPort,
-		Issues:            certChainIssues,
-		ServiceState:      inputData.ServiceState,
+		FormatVersion:      FormatVersion,
+		Errors:             shared.ErrorsToStrings(inputData.Errors),
+		CertChainOriginal:  certChainOriginal,
+		CertChainSubset:    certChainSubset,
+		Owners:             textutils.DedupeListIgnoreCase(inputData.Owners),
+		ServiceEnvironment: inputData.ServiceEnvironment,
+		Server:             server,
+		DNSName:            inputData.DNSName,
+		TCPPort:            inputData.TCPPort,
+		Issues:             certChainIssues,
+		ServiceState:       inputData.ServiceState,
 	}
 
 	payloadJSON, err := json.Marshal(payload)
