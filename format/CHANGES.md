@@ -19,9 +19,10 @@ entries that are unclear (or incomplete) in this document.
 v0.9.0 is the follow-up stable format release. New fields (see below) were
 added in this format release.
 
-| Change                         | Pull Request | Release                                                               |
-| ------------------------------ | ------------ | --------------------------------------------------------------------- |
-| Add `owners` multi-value field | PLACEHOLDER  | [v0.9.0](https://github.com/atc0005/cert-payload/releases/tag/v0.9.0) |
+| Change                                 | Pull Request | Release                                                               |
+| -------------------------------------- | ------------ | --------------------------------------------------------------------- |
+| Add `owners` multi-value field         | PLACEHOLDER  | [v0.9.0](https://github.com/atc0005/cert-payload/releases/tag/v0.9.0) |
+| Add `purpose_usage` single-value field | PLACEHOLDER  | [v0.9.0](https://github.com/atc0005/cert-payload/releases/tag/v0.9.0) |
 
 ### `format1`
 
