@@ -31,6 +31,25 @@ func InList(needle string, haystack []string, ignoreCase bool) bool {
 	return false
 }
 
+// DedupeListIgnoreCase returns a copy of a provided string slice with all
+// duplicate entries removed. The first appearance of an entry is preserved
+// with later occurrences (regardless of case) removed.
+func DedupeListIgnoreCase(s []string) []string {
+	seen := make(map[string]bool)
+	result := make([]string, 0, len(s))
+
+	for _, v := range s {
+		lower := strings.ToLower(v)
+
+		if !seen[lower] {
+			seen[lower] = true
+			result = append(result, v) // Preserves original casing of first appearance
+		}
+	}
+
+	return result
+}
+
 // DedupeList returns a copy of a provided string slice with all duplicate
 // entries removed.
 // FIXME: Is there already a standard library version of this functionality?
