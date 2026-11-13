@@ -198,7 +198,7 @@ func AvailableFormatVersions() []int {
 // format versions that client applications may choose from when encoding or
 // decoding certificate metadata payloads.
 func AvailableStableFormatVersions() []int {
-	stableFormats := make([]int, 0, len(AvailableFormatVersions()))
+	stableFormats := make([]int, 0, MaxStablePayloadVersion)
 
 	for i := MinStablePayloadVersion; i <= MaxStablePayloadVersion; i++ {
 		stableFormats = append(stableFormats, i)
