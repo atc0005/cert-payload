@@ -14,7 +14,7 @@ import (
 const (
 	// FormatVersion indicates the format version support provided by this
 	// package.
-	FormatVersion int = 1
+	FormatVersion int = 2
 )
 
 // Server reflects the host value and resolved IP Address used to retrieve the
