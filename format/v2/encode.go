@@ -83,6 +83,7 @@ func Encode(inputData input.Values) ([]byte, error) {
 			Summary:                   expiresText,
 			Status:                    certStatus,
 			SignatureAlgorithm:        origCert.SignatureAlgorithm.String(),
+			PublicKeyAlgorithm:        origCert.PublicKeyAlgorithm.String(),
 			Type:                      certs.ChainPosition(origCert, certChain),
 		}
 
