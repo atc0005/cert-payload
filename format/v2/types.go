@@ -135,6 +135,11 @@ type Certificate struct {
 	// used to sign a certificate is considered to be a vulnerability.
 	SignatureAlgorithm string `json:"signature_algorithm"`
 
+	// PublicKeyAlgorithm indicates what certificate type was evaluated.
+	// Examples include RSA, ECDSA or Ed25519. See x509.PublicKeyAlgorithm
+	// type in the standard library for the full list.
+	PublicKeyAlgorithm string `json:"public_key_algorithm"`
+
 	// Type indicates the type of certificate (leaf, intermediate or root).
 	Type string `json:"type"`
 }
