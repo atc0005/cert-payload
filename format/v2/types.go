@@ -265,12 +265,12 @@ type CertChainPayload struct {
 	// chain.
 	Owners []string `json:"owners"`
 
-	// Purpose is used to identify the classification or impact for a faulty
-	// certificate chain. As an example, a sysadmin could identify the
+	// PurposeUsage is used to identify the classification or impact for a
+	// faulty certificate chain. As an example, a sysadmin could identify the
 	// monitored certificate chain as belonging to a system/service with
 	// "Production", "Development" or "Test" classification, or simply "prod"
 	// and "non-prod".
-	Purpose string `json:"purpose_usage"`
+	PurposeUsage string `json:"purpose_usage"`
 
 	// Server reflects the host value and resolved IP Address (which could be
 	// the same value) used to retrieve the certificate chain.
