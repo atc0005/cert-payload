@@ -131,7 +131,7 @@ func Encode(inputData input.Values) ([]byte, error) {
 		CertChainOriginal: certChainOriginal,
 		CertChainSubset:   certChainSubset,
 		Owners:            textutils.DedupeListIgnoreCase(inputData.Owners),
-		Purpose:           inputData.Purpose,
+		PurposeUsage:      inputData.PurposeUsage,
 		Server:            server,
 		DNSName:           inputData.DNSName,
 		TCPPort:           inputData.TCPPort,
