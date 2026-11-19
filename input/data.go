@@ -45,12 +45,13 @@ type Values struct {
 	// is preserved with later occurrences (regardless of case) removed.
 	Owners []string
 
-	// PurposeUsage is used to identify the classification or impact for a
-	// faulty certificate chain. As an example, a sysadmin could identify the
-	// monitored certificate chain as belonging to a system/service with
+	// ServiceEnvironment is used to identify the classification or impact for
+	// a faulty certificate chain. As an example, a sysadmin could identify
+	// the monitored certificate chain as belonging to a system/service with
 	// "Production", "Development" or "Test" classification, or simply "prod"
-	// and "non-prod".
-	PurposeUsage string
+	// and "non-prod" to identify the lifecycle/deployment environment of the
+	// service using the certificate chain.
+	ServiceEnvironment string
 
 	// IncludeFullCertChain indicates that the full certificate chain should
 	// be included in the generated metadata payload. This is not included by
