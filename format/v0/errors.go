@@ -9,6 +9,10 @@ package format0
 
 import "errors"
 
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 var (
 	// ErrMissingValue indicates that an expected value was missing.
 	ErrMissingValue = errors.New("missing expected value")
