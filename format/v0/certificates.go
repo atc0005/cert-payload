@@ -15,6 +15,11 @@ import (
 )
 
 // Certificate evaluation status values.
+//
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 const (
 	// CertNotPresent indicates that a certificate chain was successfully
 	// retrieved, but a specific certificate was not present in the chain.
@@ -28,6 +33,11 @@ const (
 
 // LowestCertLifetimeValue returns the lowest remaining lifetime between
 // certificates in the certificate chain.
+//
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 func (cs Certificates) LowestCertLifetimeValue() float64 {
 	var lowest float64
 
@@ -47,6 +57,11 @@ func (cs Certificates) LowestCertLifetimeValue() float64 {
 
 // HighestCertLifetimeValue returns the highest remaining lifetime between
 // certificates in the certificate chain.
+//
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 func (cs Certificates) HighestCertLifetimeValue() float64 {
 	var highest float64
 
@@ -61,6 +76,11 @@ func (cs Certificates) HighestCertLifetimeValue() float64 {
 
 // LowestLeafCertLifetimeValue returns the lowest remaining lifetime between
 // leaf certificates in the certificate chain.
+//
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 func (cs Certificates) LowestLeafCertLifetimeValue() float64 {
 	var lowest float64
 
@@ -81,6 +101,11 @@ func (cs Certificates) LowestLeafCertLifetimeValue() float64 {
 
 // HighestLeafCertLifetimeValue returns the highest remaining lifetime between
 // leaf certificates in the certificate chain.
+//
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 func (cs Certificates) HighestLeafCertLifetimeValue() float64 {
 	var highest float64
 
@@ -97,6 +122,11 @@ func (cs Certificates) HighestLeafCertLifetimeValue() float64 {
 
 // HasExpiringLeafs indicates that there is an expiring intermediate
 // certificate in the certificate chain.
+//
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 func (cs Certificates) HasExpiringLeafs() bool {
 	for _, cert := range cs {
 		if cert.Type == certs.CertChainPositionLeaf || cert.Type == certs.CertChainPositionLeafSelfSigned {
@@ -111,6 +141,11 @@ func (cs Certificates) HasExpiringLeafs() bool {
 
 // HasExpiredLeafs indicates that there is an expired leaf certificate
 // in the certificate chain.
+//
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 func (cs Certificates) HasExpiredLeafs() bool {
 	for _, cert := range cs {
 		if cert.Type == certs.CertChainPositionLeaf || cert.Type == certs.CertChainPositionLeafSelfSigned {
@@ -125,6 +160,11 @@ func (cs Certificates) HasExpiredLeafs() bool {
 
 // LowestIntermediateCertLifetimeValue returns the lowest remaining lifetime
 // between intermediate certificates in the certificate chain.
+//
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 func (cs Certificates) LowestIntermediateCertLifetimeValue() float64 {
 	var lowest float64
 
@@ -145,6 +185,11 @@ func (cs Certificates) LowestIntermediateCertLifetimeValue() float64 {
 
 // HighestIntermediateCertLifetimeValue returns the highest remaining lifetime
 // between intermediate certificates in the certificate chain.
+//
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 func (cs Certificates) HighestIntermediateCertLifetimeValue() float64 {
 	var highest float64
 
@@ -161,6 +206,11 @@ func (cs Certificates) HighestIntermediateCertLifetimeValue() float64 {
 
 // HasExpiringIntermediates indicates that there is an expiring intermediate
 // certificate in the certificate chain.
+//
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 func (cs Certificates) HasExpiringIntermediates() bool {
 	for _, cert := range cs {
 		if cert.Type == certs.CertChainPositionIntermediate {
@@ -175,6 +225,11 @@ func (cs Certificates) HasExpiringIntermediates() bool {
 
 // HasExpiredIntermediates indicates that there is an expired intermediate
 // certificate in the certificate chain.
+//
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 func (cs Certificates) HasExpiredIntermediates() bool {
 	for _, cert := range cs {
 		if cert.Type == certs.CertChainPositionIntermediate {
@@ -189,6 +244,11 @@ func (cs Certificates) HasExpiredIntermediates() bool {
 
 // IntermediateExpiringFirst returns the intermediate certificate expiring
 // first in the certificate chain or a zero value Certificate.
+//
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 func (cs Certificates) IntermediateExpiringFirst() Certificate {
 	var lowestIntermediate Certificate
 
@@ -210,6 +270,11 @@ func (cs Certificates) IntermediateExpiringFirst() Certificate {
 // FirstLeaf returns the first leaf certificate in the certificate chain or a
 // zero value Certificate if there isn't one (e.g., a manually constructed
 // chain).
+//
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 func (cs Certificates) FirstLeaf() Certificate {
 	for _, cert := range cs {
 		if cert.Type == certs.CertChainPositionLeaf || cert.Type == certs.CertChainPositionLeafSelfSigned {
@@ -222,6 +287,11 @@ func (cs Certificates) FirstLeaf() Certificate {
 
 // LeafExpirationDescription returns a human readable version of the
 // expiration details for the first leaf certificate in the certificate chain.
+//
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 func (cs Certificates) LeafExpirationDescription() string {
 	var firstLeaf Certificate
 
@@ -253,6 +323,11 @@ func (cs Certificates) LeafExpirationDescription() string {
 // lifetime for the first leaf certificate in the certificate chain. If a leaf
 // certificate is not available (e.g., if monitoring an intermediates bundle)
 // "N/A" will be returned.
+//
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 func (cs Certificates) LeafLengthDescription() string {
 	var firstLeaf Certificate
 
@@ -279,6 +354,11 @@ func (cs Certificates) LeafLengthDescription() string {
 // IntermediateExpirationDescription returns a human readable version of the
 // expiration details for the intermediate certificate expiring first in the
 // certificate chain.
+//
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 func (cs Certificates) IntermediateExpirationDescription() string {
 	oldestIntermediate := cs.IntermediateExpiringFirst()
 
@@ -301,6 +381,11 @@ func (cs Certificates) IntermediateExpirationDescription() string {
 // FormattedExpiration formats the expiration date for the given certificate
 // using an optional custom unit of measurement and an optional precision
 // format string.
+//
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 func FormattedExpiration(cert Certificate, uom string, precisionFmtString string) string {
 	var leadInText string
 
@@ -336,6 +421,11 @@ func FormattedExpiration(cert Certificate, uom string, precisionFmtString string
 
 // FormattedLifetime formats the remaining (positive) lifetime for a given
 // certificate.
+//
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 func FormattedLifetime(cert Certificate) string {
 	uom := "%"
 	lifetime := cert.LifetimePercent

@@ -16,6 +16,21 @@ import (
 // Decode accepts a Reader which provides a certificate metadata payload and
 // decodes/unmarshals it into the given destination. An error is returned if
 // one occurs when decoding the payload.
+//
+// NOTE: This function (and the rest of this package) is for the UNSTABLE
+// payload format version 0. You are encouraged to use a stable format version
+// instead of this UNSTABLE format version for any real work; the UNSTABLE
+// payload format version 0 is for prototype and testing purposes only.
+//
+// Unlike some stable payload format versions, automatic Forward Format
+// Compatibility (FFC) is unsupported for format version 0. Also, unlike other
+// format versions, this function *intentionally* omits much of the validation
+// applied to input payload format versions and decoding destination targets.
+// YMMV.
+//
+// NOTE: The option to permit decoding unknown JSON fields into a given
+// destination is available to the caller, but the results are unlikely to be
+// useful. Use this option with caution.
 func Decode(dest *CertChainPayload, input io.Reader, allowUnknownFields bool) error {
 	dec := json.NewDecoder(input)
 
