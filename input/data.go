@@ -35,6 +35,16 @@ type Values struct {
 	// retrieving a certificate chain from a service.
 	Errors []error
 
+	// Owners is a collection of "owners" or teams with a stake or interest in
+	// a certificate's evaluation. This collection may represent both those
+	// responsible for ensuring correct replacement of a certificate chain
+	// along with those responsible for the service using the certificate
+	// chain.
+	//
+	// NOTE: Duplicate entries are ignored. The first appearance of an entry
+	// is preserved with later occurrences (regardless of case) removed.
+	Owners []string
+
 	// IncludeFullCertChain indicates that the full certificate chain should
 	// be included in the generated metadata payload. This is not included by
 	// default due to the not insignificant size increase.
