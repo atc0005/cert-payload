@@ -31,6 +31,18 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.10.0] - 2026-11-21
+
+### Added
+
+- (GH-141) Add Forward Format Compatibility (FFC) support
+
+### Changed
+
+- (GH-141) Add Forward Format Compatibility (FFC) support
+  - some breaking changes to format version 1 (`format1.Decode`)
+- (GH-143) Update payload format changes doc for v0.10.0
+
 ## [v0.9.0] - 2026-11-20
 
 ### Added
@@ -139,7 +151,8 @@ Add current code used in `atc0005/check-cert` prototype to be used when
 generating an encoded certificate chain metadata payload for inclusion in
 plugin output.
 
-[Unreleased]: https://github.com/atc0005/cert-payload/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/atc0005/cert-payload/compare/v0.10.0...HEAD
+[v0.10.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.10.0
 [v0.9.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.9.0
 [v0.8.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.8.0
 [v0.7.1]: https://github.com/atc0005/cert-payload/releases/tag/v0.7.1
