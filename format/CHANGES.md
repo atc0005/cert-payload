@@ -12,17 +12,14 @@ entries that are unclear (or incomplete) in this document.
 
 ### `format2`
 
-> [!WARNING]
->
-> Not yet released.
+v0.9.0 is the second stable format release. New fields (see below) were added
+in this format release.
 
-v0.9.0 is the follow-up stable format release. New fields (see below) were
-added in this format release.
-
-| Change                                       | Pull Request | Release                                                               |
-| -------------------------------------------- | ------------ | --------------------------------------------------------------------- |
-| Add `owners` multi-value field               | PLACEHOLDER  | [v0.9.0](https://github.com/atc0005/cert-payload/releases/tag/v0.9.0) |
-| Add `service_environment` single-value field | PLACEHOLDER  | [v0.9.0](https://github.com/atc0005/cert-payload/releases/tag/v0.9.0) |
+| Change                                        | Pull Request                                               | Release                                                               |
+| --------------------------------------------- | ---------------------------------------------------------- | --------------------------------------------------------------------- |
+| Add `owners` multi-value field                | [GH-131](https://github.com/atc0005/cert-payload/pull/131) | [v0.9.0](https://github.com/atc0005/cert-payload/releases/tag/v0.9.0) |
+| Add `service_environment` single-value field  | [GH-132](https://github.com/atc0005/cert-payload/pull/132) | [v0.9.0](https://github.com/atc0005/cert-payload/releases/tag/v0.9.0) |
+| Add `public_key_algorithm` single-value field | [GH-133](https://github.com/atc0005/cert-payload/pull/133) | [v0.9.0](https://github.com/atc0005/cert-payload/releases/tag/v0.9.0) |
 
 ### `format1`
 
