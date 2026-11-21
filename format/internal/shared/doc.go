@@ -1,5 +1,7 @@
-// Package shared provides common/shared utility code for all payload format
-// versions.
+// Package shared is an internal package that provides common/shared utility
+// code for all payload format versions. This code is not intended for
+// external use and no guarantees are made for compatibility between library
+// releases.
 package shared
 
 // Q: Rename package to `assert` ?

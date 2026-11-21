@@ -21,7 +21,7 @@ import (
 
 // Encode processes the given certificate chain and returns a JSON payload of
 // the specified format version. An error is returned if one occurs during
-// processing or if an invalid payload version format is specified.
+// processing.
 func Encode(inputData input.Values) ([]byte, error) {
 	// FIXME: We may want to accept this as an argument for testing purposes.
 	now := time.Now().UTC()

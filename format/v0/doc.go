@@ -5,12 +5,14 @@
 // Licensed under the MIT License. See LICENSE file in the project root for
 // full license information.
 
-// Package format0 implements the initial and ongoing development/unstable
-// certificate payload format.
+// Package format0 implements the initial and ongoing development/UNSTABLE
+// certificate payload format version 0.
 //
-// NOTE: Even after format v1 is released this format is subject to change
-// frequently. You are encouraged to use stable format versions 1 and higher
-// instead of this format unless testing recent changes.
+// NOTE: Format version 0 is for the UNSTABLE payload format version 0.
+// You are encouraged to use a stable format version instead of this
+// UNSTABLE format version for any real work; the UNSTABLE payload format
+// version 0 is for prototype and testing purposes only.
 //
-// NOTE: This format version provides no expectations of stability.
+// NOTE: This format version provides no expectations of stability or support
+// for Forward Format Compatibility (FFC).
 package format0
