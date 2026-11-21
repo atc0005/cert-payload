@@ -31,6 +31,26 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.9.0] - 2026-11-20
+
+### Added
+
+- (GH-131) Add `owners` multi-value field, begin format2
+- (GH-132) Add `service_environment` single-value field
+- (GH-133) Add `public_key_algorithm` field
+
+### Changed
+
+- (GH-98) CI Dependency: Bump actions/checkout from 6 to 7
+- (GH-113) Refresh documentation on format versions
+- (GH-134) Update format changes doc for v0.9.0 release
+
+### Fixed
+
+- (GH-110) Fix golangci-lint install URL
+- (GH-106) Fix typos and clarify wording
+- (GH-108) Resolve G703 linter error
+
 ## [v0.8.0] - 2026-03-19
 
 ### Changed
@@ -119,7 +139,8 @@ Add current code used in `atc0005/check-cert` prototype to be used when
 generating an encoded certificate chain metadata payload for inclusion in
 plugin output.
 
-[Unreleased]: https://github.com/atc0005/cert-payload/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/atc0005/cert-payload/compare/v0.9.0...HEAD
+[v0.9.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.9.0
 [v0.8.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.8.0
 [v0.7.1]: https://github.com/atc0005/cert-payload/releases/tag/v0.7.1
 [v0.7.0]: https://github.com/atc0005/cert-payload/releases/tag/v0.7.0
